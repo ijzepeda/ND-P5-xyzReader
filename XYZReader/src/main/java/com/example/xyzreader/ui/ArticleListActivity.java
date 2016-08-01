@@ -1,5 +1,7 @@
 package com.example.xyzreader.ui;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,22 +10,28 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
+
+import static com.example.xyzreader.R.id.photo;
 
 /**
  * An activity representing a list of Articles. This activity has different presentations for
@@ -37,12 +45,13 @@ public class ArticleListActivity extends ActionBarActivity implements
     private Toolbar mToolbar;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
-
+        activity=this;
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
 
 
@@ -132,8 +141,28 @@ public class ArticleListActivity extends ActionBarActivity implements
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    startActivity(new Intent(Intent.ACTION_VIEW,
-                            ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+                    //fixme: this block of code is meant to generate a transition, but it doesnt work correctly, probably because positions are for some other thing within the pager
+//                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//                        ActivityOptionsCompat  bundle= null;
+//                        ImageView photoView= (ImageView) view.findViewById(R.id.thumbnail);
+//                        TextView title=(TextView)view.findViewById(R.id.article_title);
+//
+////                        Pair<View, String> imagePair = Pair.create((View) placeImage, "tImage");
+//                        Pair<View, String> imagePair = Pair.create((View) photoView, getString(R.string.transition_photo));
+//                        Pair<View, String> holderPair = Pair.create((View) title, getString(R.string.transition_title));
+//                        bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
+//                               ArticleListActivity.this,// activity,
+//                                imagePair,// photoView,//view.findViewById(R.id.thumbnail),
+//                                holderPair); //photoView.getTransitionName())
+////                                .toBundle();
+//                        startActivity(new Intent(Intent.ACTION_VIEW,
+//                                ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))),bundle.toBundle());
+//                    }
+//                    else{
+                        startActivity(new Intent(Intent.ACTION_VIEW,
+                                ItemsContract.Items.buildItemUri(getItemId(vh.getAdapterPosition()))));
+//                    }
+
                 }
             });
             return vh;

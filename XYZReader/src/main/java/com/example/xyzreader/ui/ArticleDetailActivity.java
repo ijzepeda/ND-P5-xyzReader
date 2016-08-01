@@ -39,7 +39,7 @@ public class ArticleDetailActivity extends ActionBarActivity
     private View mUpButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().getDecorView().setSystemUiVisibility(
@@ -82,7 +82,9 @@ public class ArticleDetailActivity extends ActionBarActivity
         mUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onSupportNavigateUp();
+
+//                supportFinishAfterTransition();
+                onSupportNavigateUp();//fixme: Originalchanged to animate on upButton
             }
         });
 

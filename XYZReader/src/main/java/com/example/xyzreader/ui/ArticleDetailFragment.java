@@ -9,7 +9,10 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ShareCompat;
 import android.support.v7.graphics.Palette;
@@ -20,6 +23,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -44,6 +49,7 @@ public class ArticleDetailFragment extends Fragment implements
     private long mItemId;
     private View mRootView;
     private int mMutedColor = 0xFF333333;
+    private int mVibrantColor = 0xFFAAAAAA;
     private ObservableScrollView mScrollView;
     private DrawInsetsFrameLayout mDrawInsetsFrameLayout;
     private ColorDrawable mStatusBarColorDrawable;
@@ -103,8 +109,7 @@ public class ArticleDetailFragment extends Fragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
         mRootView = inflater.inflate(R.layout.fragment_article_detail, container, false);
-        mDrawInsetsFrameLayout = (DrawInsetsFrameLayout)
-                mRootView.findViewById(R.id.draw_insets_frame_layout);
+        mDrawInsetsFrameLayout = (DrawInsetsFrameLayout) mRootView.findViewById(R.id.draw_insets_frame_layout);
         mDrawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
             @Override
             public void onInsetsChanged(Rect insets) {
@@ -125,16 +130,20 @@ public class ArticleDetailFragment extends Fragment implements
 
         mPhotoView = (ImageView) mRootView.findViewById(R.id.photo);
         mPhotoContainerView = mRootView.findViewById(R.id.photo_container);
+//        mPhotoContainerView = mRootView.findViewById(R.id.photo_container_article);
 
         mStatusBarColorDrawable = new ColorDrawable(0);
 
-        mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
+//        mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//               share();
+//            }
+//        });
+       mRootView.findViewById(R.id.share_fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
-                        .setType("text/plain")
-                        .setText("Some sample text")
-                        .getIntent(), getString(R.string.action_share)));
+                share();
             }
         });
 
@@ -143,6 +152,14 @@ public class ArticleDetailFragment extends Fragment implements
         return mRootView;
     }
 
+    public void share(){
+        startActivity(Intent.createChooser(ShareCompat.IntentBuilder.from(getActivity())
+                        .setType("text/plain")
+                        .setText("Some sample text")
+                        .getIntent(), getString(R.string.action_share)));
+    }
+
+
     private void updateStatusBar() {
         int color = 0;
         if (mPhotoView != null && mTopInset != 0 && mScrollY > 0) {
@@ -150,12 +167,22 @@ public class ArticleDetailFragment extends Fragment implements
                     mStatusBarFullOpacityBottom - mTopInset * 3,
                     mStatusBarFullOpacityBottom - mTopInset);
             color = Color.argb((int) (255 * f),
-                    (int) (Color.red(mMutedColor) * 0.9),
-                    (int) (Color.green(mMutedColor) * 0.9),
-                    (int) (Color.blue(mMutedColor) * 0.9));
+                    (int) (Color.red(mVibrantColor) * 0.9),//                    (int) (Color.red(mMutedColor) * 0.9),
+                    (int) (Color.green(mVibrantColor) * 0.9),//                    (int) (Color.green(mMutedColor) * 0.9),
+                    (int) (Color.blue(mVibrantColor) * 0.9));//                    (int) (Color.blue(mMutedColor) * 0.9));
         }
         mStatusBarColorDrawable.setColor(color);
         mDrawInsetsFrameLayout.setInsetBackground(mStatusBarColorDrawable);
+//
+////        just for current fragment
+//        getActivity().getWindow().setBackgroundDrawable(new ColorDrawable(mMutedColor));
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            getActivity().getWindow().setStatusBarColor(mVibrantColor);
+//        }
+
+
+
     }
 
     static float progress(float v, float min, float max) {
@@ -203,12 +230,22 @@ public class ArticleDetailFragment extends Fragment implements
                         public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
                             Bitmap bitmap = imageContainer.getBitmap();
                             if (bitmap != null) {
-                                Palette p = Palette.generate(bitmap, 12);
+//                                Palette p = Palette.generate(bitmap, 12);
+                                Palette p = Palette.generate(bitmap);
+//                                Palette p = Palette.from(bitmap).generate();
                                 mMutedColor = p.getDarkMutedColor(0xFF333333);
+                                mVibrantColor = p.getVibrantColor(0xFF555555);
+//                                mVibrantColor = p.getDarkVibrantColor(getResources().getColor(R.color.muted_color));
                                 mPhotoView.setImageBitmap(imageContainer.getBitmap());
-                                mRootView.findViewById(R.id.meta_bar)
-                                        .setBackgroundColor(mMutedColor);
+//                                mRootView.findViewById(R.id.meta_bar)
+//                                        .setBackgroundColor(mVibrantColor);//                                        .setBackgroundColor(mMutedColor);
+
+
+
                                 updateStatusBar();
+
+//
+
                             }
                         }
 

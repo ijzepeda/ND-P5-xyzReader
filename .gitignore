@@ -1,7 +1,6 @@
 *.iml
 /build
 /XYZReader/build
-/XYZReader/libs
 local.properties
 .idea
 .gradle
