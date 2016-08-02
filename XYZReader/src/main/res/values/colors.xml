@@ -29,7 +29,8 @@
     <color name="ltgray">#212121</color><!--PostTitle, post text -->
     <color name="muted_color">#BF360C</color><!--PostTitle, post text -->
     <color name="vibrant_color">#03A9F4</color><!--PostTitle, post text -->
-    <color name="ripple_color">#5003A9F4</color><!--links, FAB -->
+    <color name="ripple_color">#FF3D00</color><!--links, FAB 5003A9F4 -->
+    <color name="smoke_transparent">#6000</color><!--links, FAB -->
 
 
 

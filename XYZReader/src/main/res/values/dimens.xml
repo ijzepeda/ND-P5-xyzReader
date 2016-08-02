@@ -14,5 +14,10 @@
     <!--?actionBarSize-->
     <dimen name="spacing_large">16dp</dimen>
 
+<dimen name="card_margin_vert">4dp</dimen>
+<dimen name="card_margin_hor">4dp</dimen>
+    <dimen name="carod_network_image_heigh">100dp</dimen>
+    <dimen name="card_margin_text_hor">16dp</dimen>
+    <dimen name="card_margin_text_ver">16dp</dimen>
 
 </resources>
